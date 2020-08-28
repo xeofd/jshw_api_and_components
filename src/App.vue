@@ -2,7 +2,7 @@
   <!-- START MAIN -->
   <main id="__app_main">
     <header id="__app_header">
-      <h1>News Collection</h1>
+      <h1>News Collector</h1>
     </header>
     <div id="__app_content">
       <section id="app_selector"></section>
@@ -33,7 +33,14 @@ export default {
       // This function is used to retireve data from the correct API
       fetch(api_url + encodeURIComponent(this.search_term) + key) // Pass in the needed items for the fetch request && encode the search term
         .then(request => request.json()) // Grab the returned JSON
-        .then(); // Pass the returned data into the correct result array
+        .then(response => {
+          // Pass the returned data into the correct result array
+          if (source === "guardian_api") {
+            this.guardianapi_results = response.results;
+          } else if (source === "news_api") {
+            this.newsapi_results = response.articles;
+          }
+        });
     },
     api_call: function(api) {
       if (api === "guardian_api") {

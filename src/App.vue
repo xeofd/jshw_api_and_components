@@ -41,10 +41,13 @@ export default {
         .then(response => {
           // Pass the returned data into the correct result array
           if (source === "guardian_api") {
-            this.guardianapi_results = response.results;
+            this.guardianapi_results = response.response.results;
           } else if (source === "news_api") {
             this.newsapi_results = response.articles;
           }
+
+          // Run the data formatter
+          this.formatData();
         });
     },
     api_call: function(api) {
@@ -67,52 +70,45 @@ export default {
     handleSearch: function() {
       // Call search on Guardian News API
       this.api_call("guardian_api");
+
       // Call search on News API
       this.api_call("news_api");
     },
     formatData: function() {
       // Grab and format guardian api data
-      const guardian_data = () => {
-        // Check if there is any data in guardianapi_results
-        if (this.guardianapi_results.length > 1) {
-          this.guardianapi_results.forEach(article => {
-            // Create article object
-            const article_object = {
-              source: "Guardian News",
-              title: article.webTitle,
-              publish_date: new Date(article.webPublicationDate),
-              url: article.webUrl
-            };
+      // Check if there is any data in guardianapi_results
+      if (this.guardianapi_results.length > 1) {
+        this.guardianapi_results.forEach(article => {
+          // Create article object
+          const article_object = {
+            source: "Guardian News",
+            title: article.webTitle,
+            publish_date: new Date(article.webPublicationDate),
+            url: article.webUrl
+          };
 
-            // Push article data to all_results
-            this.all_results.push(article_object);
-          });
-        }
-      };
+          // Push article data to all_results
+          this.all_results.push(article_object);
+        });
+      }
 
       // Grab and format news api data
-      const news_data = () => {
-        // Check if there is any data in newsapi_results
-        if (this.newsapi_results.length > 1) {
-          this.newsapi_results.forEach(article => {
-            // Create article object
-            const article_object = {
-              source: article.source.name,
-              title: article.title,
-              publish_date: new Date(article.publishedAt),
-              url: article.url,
-              content: article.content
-            };
+      // Check if there is any data in newsapi_results
+      if (this.newsapi_results.length > 1) {
+        this.newsapi_results.forEach(article => {
+          // Create article object
+          const article_object = {
+            source: article.source.name,
+            title: article.title,
+            publish_date: new Date(article.publishedAt),
+            url: article.url,
+            content: article.content
+          };
 
-            // Push article data to all_results
-            this.all_results.push(article_object);
-          });
-        }
-      };
-
-      // Call both functions
-      guardian_data();
-      news_data();
+          // Push article data to all_results
+          this.all_results.push(article_object);
+        });
+      }
     }
   },
   computed: {
@@ -120,9 +116,7 @@ export default {
       return this.all_results.length;
     }
   },
-  mounted() {
-    this.formatData();
-  }
+  mounted() {}
 };
 </script>
 

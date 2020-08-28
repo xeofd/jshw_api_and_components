@@ -1,28 +1,37 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <!-- START MAIN -->
+  <main id="__app_main">
+    <header id="__app_header">
+      <h1>News Collection</h1>
+    </header>
+    <div id="__app_content">
+      <section id="app_selector"></section>
+      <section id="app_article"></section>
+    </div>
+  </main>
+  <!-- END MAIN -->
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+// Imports
+import { API_KEYS } from "./API_KEYS";
 
 export default {
-  name: "App",
-  components: {
-    HelloWorld
-  }
+  name: "app",
+  data() {
+    return {
+      all_results: [],
+      guardian_results: [],
+      newsapi_results: [],
+      search_term: ""
+    };
+  },
+  methods: {
+    api_call: function(api, search_term = null) {}
+  },
+  computed: {},
+  mounted() {}
 };
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>

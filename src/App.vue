@@ -42,12 +42,11 @@ export default {
           // Pass the returned data into the correct result array
           if (source === "guardian_api") {
             this.guardianapi_results = response.response.results;
+            this.formatGuardianData();
           } else if (source === "news_api") {
             this.newsapi_results = response.articles;
+            this.formatNewsData();
           }
-
-          // Run the data formatter
-          this.formatData();
         });
     },
     api_call: function(api) {
@@ -74,7 +73,7 @@ export default {
       // Call search on News API
       this.api_call("news_api");
     },
-    formatData: function() {
+    formatGuardianData: function() {
       // Grab and format guardian api data
       // Check if there is any data in guardianapi_results
       if (this.guardianapi_results.length > 1) {
@@ -91,7 +90,8 @@ export default {
           this.all_results.push(article_object);
         });
       }
-
+    },
+    formatNewsData: function() {
       // Grab and format news api data
       // Check if there is any data in newsapi_results
       if (this.newsapi_results.length > 1) {

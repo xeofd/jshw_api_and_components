@@ -14,7 +14,7 @@
 
 <script>
 // Imports
-import { API_KEYS } from "./API_KEYS";
+import { API_KEYS } from "./api_keys";
 
 export default {
   name: "app",

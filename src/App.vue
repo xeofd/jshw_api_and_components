@@ -5,7 +5,12 @@
       <h1>News Collector</h1>
     </header>
     <div id="__app_content">
-      <section id="app_selector"></section>
+      <section id="app_selector">
+        <form v-on:submit.prevent="handleSearch">
+          <input type="text" v-model="search_term" placeholder="Search" /><br />
+          <input type="submit" value="search" />
+        </form>
+      </section>
       <section id="app_article"></section>
     </div>
   </main>
@@ -58,10 +63,66 @@ export default {
         // Call the API
         this.api(api, news_url, news_key);
       }
+    },
+    handleSearch: function() {
+      // Call search on Guardian News API
+      this.api_call("guardian_api");
+      // Call search on News API
+      this.api_call("news_api");
+    },
+    formatData: function() {
+      // Grab and format guardian api data
+      const guardian_data = () => {
+        // Check if there is any data in guardianapi_results
+        if (this.guardianapi_results.length > 1) {
+          this.guardianapi_results.forEach(article => {
+            // Create article object
+            const article_object = {
+              source: "Guardian News",
+              title: article.webTitle,
+              publish_date: new Date(article.webPublicationDate),
+              url: article.webUrl
+            };
+
+            // Push article data to all_results
+            this.all_results.push(article_object);
+          });
+        }
+      };
+
+      // Grab and format news api data
+      const news_data = () => {
+        // Check if there is any data in newsapi_results
+        if (this.newsapi_results.length > 1) {
+          this.newsapi_results.forEach(article => {
+            // Create article object
+            const article_object = {
+              source: article.source.name,
+              title: article.title,
+              publish_date: new Date(article.publishedAt),
+              url: article.url,
+              content: article.content
+            };
+
+            // Push article data to all_results
+            this.all_results.push(article_object);
+          });
+        }
+      };
+
+      // Call both functions
+      guardian_data();
+      news_data();
     }
   },
-  computed: {},
-  mounted() {}
+  computed: {
+    article_count: function() {
+      return this.all_results.length;
+    }
+  },
+  mounted() {
+    this.formatData();
+  }
 };
 </script>
 

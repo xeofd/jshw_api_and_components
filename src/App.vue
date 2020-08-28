@@ -19,15 +19,39 @@ import { API_KEYS } from "./API_KEYS";
 export default {
   name: "app",
   data() {
+    // Data for the app
     return {
-      all_results: [],
-      guardian_results: [],
-      newsapi_results: [],
-      search_term: ""
+      all_results: [], // All results from API's formatted in a standard way
+      guardianapi_results: [], // Guardian News API results
+      newsapi_results: [], // Newsapi.org API results
+      search_term: "", // User inputed search term
+      selected_article: null // User selected search term, passed up from components
     };
   },
   methods: {
-    api_call: function(api, search_term = null) {}
+    api: function(source, api_url, key) {
+      // This function is used to retireve data from the correct API
+      fetch(api_url + encodeURIComponent(this.search_term) + key) // Pass in the needed items for the fetch request && encode the search term
+        .then(request => request.json()) // Grab the returned JSON
+        .then(); // Pass the returned data into the correct result array
+    },
+    api_call: function(api) {
+      if (api === "guardian_api") {
+        // Set the correct URL and API Key
+        const guardian_url = "https://content.guardianapis.com/search?q=";
+        const guardian_key = "&api-key=" + API_KEYS.guardian_api;
+
+        // Call the API
+        this.api(api, guardian_url, guardian_key);
+      } else if (api === "news_api") {
+        // Set correct URL and API Key
+        const news_url = "https://newsapi.org/v2/everything?q=";
+        const news_key = "&apiKey=" + API_KEYS.news_api;
+
+        // Call the API
+        this.api(api, news_url, news_key);
+      }
+    }
   },
   computed: {},
   mounted() {}

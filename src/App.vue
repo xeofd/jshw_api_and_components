@@ -5,13 +5,26 @@
       <h1>News Collector</h1>
     </header>
     <div id="__app_content">
-      <section id="app_selector">
-        <form v-on:submit.prevent="handleSearch">
-          <input type="text" v-model="search_term" placeholder="Search" /><br />
-          <input type="submit" value="search" />
-        </form>
+      <section class="w-40" id="app_selector">
+        <div class="block">
+          <h2>Search for a story</h2>
+          <form v-on:submit.prevent="handleSearch">
+            <input type="text" v-model="search_term" placeholder="Search" />
+            <br />
+            <input type="submit" value="search" />
+          </form>
+        </div>
+        <news-list
+          v-if="all_results.length > 0"
+          :results="all_results"
+        ></news-list>
       </section>
-      <section id="app_article"></section>
+      <section class="w-60" id="app_article">
+        <div v-if="article_count > 0" class="block">
+          <h2>Total articles: {{ article_count }}</h2>
+        </div>
+        <article-data class="block"></article-data>
+      </section>
     </div>
   </main>
   <!-- END MAIN -->
@@ -20,6 +33,9 @@
 <script>
 // Imports
 import { API_KEYS } from "./api_keys";
+import { eventBus } from "./main";
+import newsList from "./components/newsList";
+import articleData from "./components/articleData";
 
 export default {
   name: "app",
@@ -67,6 +83,11 @@ export default {
       }
     },
     handleSearch: function() {
+      // Wipe the results
+      this.all_results = [];
+      this.guardianapi_results = [];
+      this.newsapi_results = [];
+
       // Call search on Guardian News API
       this.api_call("guardian_api");
 
@@ -112,11 +133,21 @@ export default {
     }
   },
   computed: {
+    // Count total  articles
     article_count: function() {
       return this.all_results.length;
     }
   },
-  mounted() {}
+  mounted() {
+    // Check for eventBus data
+    eventBus.$on("passArticle", article => {
+      this.selected_article = article;
+    });
+  },
+  components: {
+    "news-list": newsList,
+    "article-data": articleData
+  }
 };
 </script>
 

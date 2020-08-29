@@ -5,7 +5,7 @@
       <h1>News Collector</h1>
     </header>
     <div id="__app_content">
-      <section class="w-40" id="app_selector">
+      <section class="w-30" id="app_selector">
         <div class="block">
           <h2>Search for a story</h2>
           <form v-on:submit.prevent="handleSearch">
@@ -19,11 +19,15 @@
           :results="all_results"
         ></news-list>
       </section>
-      <section class="w-60" id="app_article">
+      <section class="w-70" id="app_article">
         <div v-if="article_count > 0" class="block">
           <h2>Total articles: {{ article_count }}</h2>
         </div>
-        <article-data class="block"></article-data>
+        <article-data
+          class="block"
+          v-if="selected_article"
+          :article="selected_article"
+        ></article-data>
       </section>
     </div>
   </main>
